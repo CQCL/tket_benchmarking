@@ -10,7 +10,7 @@ import pyquil
 from pyquil.api import QVMCompiler
 from pyquil.api._config import PyquilConfig
 from pyquil import Program, get_qc
-from pyquil.device import NxDevice
+from pyquil.device import isa_from_graph, Device as Device_
 import networkx as nx
 
 import os, pandas, time, itertools, docker
@@ -28,7 +28,7 @@ backend_outfile_str = {
     _BACKEND_FULL : "FullConnectivity",
     _BACKEND_GOOGLE : "Sycamore",
     _BACKEND_IBM : "Rochester",
-    _BACKEND_RIGETTI : "Rigetti"
+    _BACKEND_RIGETTI : "Aspen"
 }
 
 _COMPILER_TKET = "tket"
@@ -56,14 +56,23 @@ pass_outfile_str = {
     "" : ""
 }
 
+_SET_ALL = "all"
+_SET_UCCSD = "uccsd"
+
+set_outfile_str = {
+    _SET_ALL : "",
+    _SET_UCCSD : "Chem"
+}
+
 def usage():
-    print("usage: {source} [-c <compiler>] [-b <backend>] [-p <pass>]".format(source=sys.argv[0]))
+    print("usage: {source} [-c <compiler>] [-b <backend>] [-p <pass>] [-s <set>]".format(source=sys.argv[0]))
     print("<compiler> = {tket} (default), {qiskit}, {quilc}".format(tket=_COMPILER_TKET, qiskit=_COMPILER_QISKIT, quilc=_COMPILER_QUILC))
     print("<backend> = {full} (default), {google}, {ibm}, {rigetti}".format(full=_BACKEND_FULL, google=_BACKEND_GOOGLE, ibm=_BACKEND_IBM, rigetti=_BACKEND_RIGETTI))
     print("<pass> = {full} (default), {chem}, {qisO1}, {qisO2}, {qisO3}".format(full=_PASS_FULLPASS, chem=_PASS_CHEMPASS, qisO1=_PASS_QISO1, qisO2=_PASS_QISO2, qisO3=_PASS_QISO3))
+    print("<set> = {all} (default), {uccsd}".format(all=_SET_ALL, uccsd=_SET_UCCSD))
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "c:b:p:")
+    opts, args = getopt.getopt(sys.argv[1:], "c:b:p:s:")
 except getopt.GetoptError as err:
     print(err)
     usage()
@@ -72,6 +81,7 @@ except getopt.GetoptError as err:
 compiler = _COMPILER_TKET
 backend = _BACKEND_FULL
 comp_pass = _PASS_FULLPASS
+test_set = _SET_ALL
 
 for o, v in opts:
     if o == '-c':
@@ -95,6 +105,13 @@ for o, v in opts:
             print("invalid pass: {v}".format(v=v))
             usage()
             exit()
+    elif o == '-s':
+        if v in (_SET_ALL, _SET_UCCSD):
+            test_set = v
+        else:
+            print("invalid test set: {v}".format(v=v))
+            usage()
+            exit()
 
 if compiler == _COMPILER_QUILC:
     comp_pass = ""
@@ -102,15 +119,16 @@ elif compiler == _COMPILER_QISKIT:
     if comp_pass == _PASS_FULLPASS: # Default
         comp_pass = _PASS_QISO3
 
-outfile = "Results_{comp}_{cpass}_{back}.csv".format(
+outfile = "{set}Results_{comp}_{cpass}_{back}.csv".format(
+    set=set_outfile_str[test_set],
     comp=compiler_outfile_str[compiler],
     cpass=pass_outfile_str[comp_pass],
     back=backend_outfile_str[backend])
 
 ### optimisation passes:
-QuickPass = SynthesiseIBM()
-FullPass = FullPeepholeOptimise()
-ChemPass = SequencePass([PauliSimp(),FullPass])
+tketpass = FullPeepholeOptimise()
+if compiler == _COMPILER_TKET and comp_pass == _PASS_CHEMPASS:
+    tketpass = SequencePass([PauliSimp(), FullPeepholeOptimise()])
 
 all_to_all_coupling = list()
 for i in range(53):
@@ -188,6 +206,7 @@ def run_tket_pass(circ:Circuit,total_pass,backend:str):
         start_time = time.process_time()
         total_pass.apply(cu)
         time_elapsed = time.process_time() - start_time
+        print(time_elapsed)
         circ2 = cu.circuit
         if backend in (_BACKEND_GOOGLE, _BACKEND_RIGETTI):
             two_qb_gate = OpType.CZ
@@ -227,6 +246,7 @@ def run_qiskit_pass(fpath:str,backend:str):
         start_time = time.process_time()
         qsc2 = transpile(qsc,basis_gates=basis_gates,coupling_map=cm,optimization_level=opt_level)
         time_elapsed = time.process_time() - start_time
+        print(time_elapsed)
         circ2 = qiskit_to_tk(qsc2)
         return [circ2.n_gates, circ2.depth(), circ2.n_gates_of_type(two_qb_gate), circ2.depth_by_type(two_qb_gate), time_elapsed]
     except Exception as e :
@@ -239,22 +259,31 @@ def run_quilc_pass(circ:Circuit,backend:str):
         Transform.RebaseToQuil().apply(circ)
         p_circ = tk_to_pyquil(circ)
         if backend == _BACKEND_IBM:
-            device = NxDevice(nx.from_edgelist(ibm_coupling))
+            devgraph = nx.from_edgelist(ibm_coupling)
+            twoq_type = ['CZ']
+            twoq_set = {OpType.CZ}
         elif backend == _BACKEND_RIGETTI:
-            device = NxDevice(nx.from_edgelist(rigetti_coupling))
+            devgraph = nx.from_edgelist(rigetti_coupling)
+            twoq_type = ['CZ', 'XY']
+            twoq_set = {OpType.CZ, OpType.ISWAP}
         elif backend == _BACKEND_GOOGLE:
-            device = NxDevice(nx.from_edgelist(google_coupling))
+            devgraph = nx.from_edgelist(google_coupling)
+            twoq_type = ['CZ']
+            twoq_set = {OpType.CZ}
         elif backend == _BACKEND_FULL:
-            device = pyquil.api._quantum_computer._get_unrestricted_qvm('full', False, circ.n_qubits).device
+            devgraph = nx.complete_graph(circ.n_qubits)
+            twoq_type = ['CZ', 'XY']
+            twoq_set = {OpType.CZ, OpType.ISWAP}
+        isa = isa_from_graph(devgraph, twoq_type=twoq_type)
+        device = Device_("dev", {"isa" : isa.to_dict()})
+        device._isa = isa
         qcompiler = QVMCompiler(PyquilConfig().quilc_url, device, timeout=600)
-        print("running compiler")
         start_time = time.time()
         compiled_pr = qcompiler.quil_to_native_quil(p_circ)
         time_elapsed = time.time() - start_time
         print(time_elapsed)
         circ2 = pyquil_to_tk(compiled_pr)
-        two_qb_gate = OpType.CZ
-        return [circ2.n_gates, circ2.depth(), circ2.n_gates_of_type(two_qb_gate), circ2.depth_by_type(two_qb_gate), time_elapsed]
+        return [circ2.n_gates, circ2.depth(), sum(circ2.n_gates_of_type(op) for op in twoq_set), circ2.depth_by_type(twoq_set), time_elapsed]
     except Exception as e :
         print(e)
         print("quilc error")
@@ -262,20 +291,25 @@ def run_quilc_pass(circ:Circuit,backend:str):
 
 stat_table = pandas.DataFrame({})
 
-test_table = pandas.read_csv("tket_paper_config.csv")
-total_pass = gen_tket_pass(FullPass,backend)
+if test_set == _SET_ALL:
+    test_table = pandas.read_csv("tket_paper_config.csv")
+    filepath = "qasm_files"
+elif test_set == _SET_UCCSD:
+    test_table = pandas.read_csv("chem_config.csv")
+    filepath = "chem_qasm"
+
+total_pass = gen_tket_pass(tketpass,backend)
 
 if compiler == _COMPILER_QUILC:
     dock = docker.from_env()
     qvm_container = dock.containers.run(image="rigetti/qvm", command="-S", detach=True, ports={5000:5000}, remove=True)
-    quilc_container = dock.containers.run(image="rigetti/quilc", command="-S", detach=True, ports={5555:5555}, remove=True)
+    quilc_container = dock.containers.run(image="rigetti/quilc:1.16.3", command="-R", detach=True, ports={5555:5555}, remove=True)
     time.sleep(4) # Give it time to boot up and start the servers
 
-for index, row in test_table[1:].iterrows():
+for index, row in test_table.iterrows():
     print(index)
     filename = row['Filename']
-    fpath = os.path.join("qasm_files", filename)
-    # if not "pf" in fpath and not "UCCSD" in fpath: continue
+    fpath = os.path.join(filepath, filename)
     circ = circuit_from_qasm(fpath)
     if backend == _BACKEND_RIGETTI and circ.n_qubits > 16:
         results = [[filename] + [nan,nan,nan,nan,nan]]
