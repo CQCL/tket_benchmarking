@@ -1,0 +1,16 @@
+Filename,Gate count,Depth,2qb gate count,2qb depth,Time elapsed
+H2_cmplt_P_sto3g.qasm,257.0,137.0,43.0,33.0,0.16915600000000008
+H2_cmplt_BK_sto3g.qasm,245.0,172.0,40.0,38.0,0.1466059999999998
+H2_cmplt_JW_sto3g.qasm,197.0,127.0,28.0,26.0,0.24514199999999997
+H2_cmplt_BK_631g.qasm,,,,,
+H2_cmplt_P_631g.qasm,,,,,
+H2_cmplt_JW_631g.qasm,,,,,
+H4_cmplt_P_sto3g.qasm,,,,,
+H4_cmplt_BK_sto3g.qasm,,,,,
+H4_cmplt_JW_sto3g.qasm,,,,,
+LiH_frz_BK_sto3g.qasm,8611.0,4662.0,1566.0,1241.0,11.757861999999996
+LiH_frz_P_sto3g.qasm,9144.0,4979.0,1663.0,1310.0,11.846998
+LiH_frz_JW_sto3g.qasm,8115.0,4280.0,1472.0,1145.0,12.661665
+NH_frz_P_sto3g.qasm,22538.0,13064.0,4128.0,3482.0,28.093673000000024
+NH_frz_JW_sto3g.qasm,15260.0,9203.0,2682.0,2316.0,30.091864999999984
+NH_frz_BK_sto3g.qasm,26488.0,14735.0,4883.0,4137.0,32.99982700000001

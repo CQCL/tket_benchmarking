@@ -1,0 +1,16 @@
+Filename,Gate count,Depth,2qb gate count,2qb depth
+H2_cmplt_P_sto3g.qasm,92,66,38,36
+H2_cmplt_BK_sto3g.qasm,93,69,38,38
+H2_cmplt_JW_sto3g.qasm,150,83,56,52
+H2_cmplt_BK_631g.qasm,1343,851,630,615
+H2_cmplt_P_631g.qasm,1378,903,666,658
+H2_cmplt_JW_631g.qasm,1478,979,768,744
+H4_cmplt_P_sto3g.qasm,2630,1739,1316,1285
+H4_cmplt_BK_sto3g.qasm,2630,1761,1316,1298
+H4_cmplt_JW_sto3g.qasm,2820,1790,1440,1360
+LiH_frz_BK_sto3g.qasm,2890,1868,1442,1438
+LiH_frz_P_sto3g.qasm,2957,1862,1448,1437
+LiH_frz_JW_sto3g.qasm,2850,1985,1616,1576
+NH_frz_P_sto3g.qasm,7289,4707,3700,3654
+NH_frz_JW_sto3g.qasm,7046,4640,3896,3674
+NH_frz_BK_sto3g.qasm,8303,5214,4178,4160
