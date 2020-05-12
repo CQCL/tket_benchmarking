@@ -1,8 +1,8 @@
 from pytket import Circuit, OpType
 from pytket.device import Device
-from pytket.passes import FullPeepholeOptimise, SequencePass, PauliSimp, RebaseQuil
+from pytket.passes import FullPeepholeOptimise, SequencePass, PauliSimp, RebaseQuil, RebaseCirq, RebaseIBM, CXMappingPass, SynthesiseIBM
 from pytket.predicates import CompilationUnit
-from pytket.routing import Architecture
+from pytket.routing import Architecture, GraphPlacement
 from pytket.qasm import circuit_from_qasm
 
 import os, pandas, time, itertools, docker
@@ -203,9 +203,8 @@ def gen_tket_pass(optimisepass,backend:str):
     elif backend == _BACKEND_IBM: 
         final_pass = RebaseIBM()
         device = ibm_rochester_device
-    router = gen_default_mapping_pass(device)
-    decomp = gen_decompose_routing_gates_to_cxs_pass(device) ###ignoring connectivity
-    total_pass = SequencePass([optimisepass,router,decomp,SynthesiseIBM(),final_pass])
+    mapper = CXMappingPass(device, GraphPlacement(device))
+    total_pass = SequencePass([optimisepass,mapper,SynthesiseIBM(),final_pass])
     return total_pass
 
 def run_tket_pass(circ:Circuit,total_pass,backend:str):
