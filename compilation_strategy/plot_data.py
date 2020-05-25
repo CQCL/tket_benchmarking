@@ -4,12 +4,12 @@ import pandas
 import seaborn as sns
 
 for encoding in ('JW', 'BK', 'P'):
-    for metric in ('Count', 'Depth'):
-        filename = '{}_results'.format(encoding)
+    filename = '{}_results'.format(encoding)
 
-        table_initial = pandas.read_csv('{}.csv'.format(filename))
-        if encoding == 'JW':
-            table_TLOS = pandas.read_csv('TLOS_results.csv')
+    table_initial = pandas.read_csv('{}.csv'.format(filename))
+    if encoding == 'JW':
+        table_TLOS = pandas.read_csv('TLOS_results.csv')
+    for metric in ('Count', 'Depth'):
 
         list_spins = table_initial['Active Spin Orbitals']
         list_uncoloured = table_initial['Naive CX {}'.format(metric)]
@@ -31,11 +31,11 @@ for encoding in ('JW', 'BK', 'P'):
 
         markers = ['v','p','x','.']
         colours = sns.color_palette('Set2')
-        names = ['Naive','Pairwise','Sets','TLOS']
+        strat = ['Naive','Pairwise','Sets','TLOS']
         linestyles = [':','--','-.','-']
         d = 4
         for i, l in enumerate(all_lists) :
-            ax1.plot(list_spins,l,label=names[i],marker=markers[i],markersize=6,c=colours[i],linewidth=0)
+            ax1.plot(list_spins,l,label=strat[i],marker=markers[i],markersize=6,c=colours[i],linewidth=0)
             ax1.plot(list_spins, 10**(np.poly1d(np.polyfit(list_spins,np.log10(l), d))(list_spins)),linewidth=1.1,linestyle=linestyles[i],c=colours[i])
 
         ax1.set_yscale('log')
