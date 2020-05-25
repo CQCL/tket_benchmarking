@@ -4,29 +4,20 @@ import pandas
 import seaborn as sns
 
 for encoding in ('JW', 'BK', 'P'):
-    for depth in (True, False): # either plot CX Depth or CX Count
+    for metric in ('Count', 'Depth'):
         filename = '{}_results'.format(encoding)
 
         table_initial = pandas.read_csv('{}.csv'.format(filename))
         if encoding == 'JW':
             table_TLOS = pandas.read_csv('TLOS_results.csv')
 
-        if depth:
-            list_spins = table_initial['Active Spin Orbitals']
-            list_uncoloured = table_initial['Naive CX Depth']
-            list_pair = table_initial['Pairwise CX Depth']
-            list_set = table_initial['Set CX Depth']
-            if encoding == 'JW':
-                list_template = table_TLOS['TLOS CX Depth']
-            name = 'CX depth'
-        else:
-            list_spins = table_initial['Active Spin Orbitals']
-            list_uncoloured = table_initial['Naive CX Count']
-            list_pair = table_initial['Pairwise CX Count']
-            list_set = table_initial['Set CX Count']
-            if encoding == 'JW':
-                list_template = table_TLOS['TLOS CX Count']
-            name = 'CX count'
+        list_spins = table_initial['Active Spin Orbitals']
+        list_uncoloured = table_initial['Naive CX {}'.format(metric)]
+        list_pair = table_initial['Pairwise CX {}'.format(metric)]
+        list_set = table_initial['Set CX {}'.format(metric)]
+        if encoding == 'JW':
+            list_template = table_TLOS['TLOS CX {}'.format(metric)]
+        name = 'CX {}'.format(metric)
 
         all_lists = [list_uncoloured,list_pair,list_set]
         if encoding == 'JW':
