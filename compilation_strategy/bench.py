@@ -37,11 +37,11 @@ cols = [
 ]
 
 for encoding_name in ("BK", "JW", "P"):
-    directory = "{}_operators".format(encoding_name)
-    results_file = "{}_results.csv".format(encoding_name)
+    op_directory = "operators/{}_operators".format(encoding_name)
+    results_file = "results/{}_results.csv".format(encoding_name)
     stat_table = pd.DataFrame({})
-    for filename in os.listdir(directory):
-        path = directory + "/" + filename
+    for filename in os.listdir(op_directory):
+        path = op_directory + "/" + filename
         with open(path, "rb") as pickle_in:
             qubit_pauli_operator = pickle.load(pickle_in)
         name = filename.replace(".pickle", "")

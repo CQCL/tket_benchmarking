@@ -4,12 +4,12 @@ import pandas
 import seaborn as sns
 
 for encoding in ("JW", "BK", "P"):
-    filename = "{}_results".format(encoding)
+    filename = "results/{}_results".format(encoding)
 
     table_initial = pandas.read_csv("{}.csv".format(filename))
     if encoding == "JW":
-        table_TLOS = pandas.read_csv("TLOS_results.csv")
-        table_vdBT = pandas.read_csv("vdBT_results.csv")
+        table_TLOS = pandas.read_csv("results/TLOS_results.csv")
+        table_vdBT = pandas.read_csv("results/vdBT_results.csv")
     for metric in ("Count", "Depth"):
 
         list_spins = table_initial["Active Spin Orbitals"]
