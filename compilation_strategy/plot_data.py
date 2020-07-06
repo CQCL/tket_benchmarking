@@ -31,12 +31,12 @@ for encoding in ("JW", "BK", "P"):
 
         for l in all_lists:
             # ignore list_vdBT here
-            if len(l) != 19:
+            if len(l) < 19:
                 continue
             reduction = 1 - sum(
                 [l[i] / list_uncoloured[i] for i in range(len(l))]
             ) / len(l)
-            print(reduction)
+            print("{} {}: {}".format(encoding, metric, reduction))
         f, (ax1) = plt.subplots(1, 1)
 
         markers = ["v", "p", "x", ".", "<"]
@@ -82,5 +82,5 @@ for encoding in ("JW", "BK", "P"):
         f.set_size_inches(6, 5, forward=True)
         stat = name.replace(" ", "_")
         plt.savefig(
-            "plots/Compare_{}_{}.eps".format(encoding, stat), format="eps", dpi=1000
+            "plots2/Compare_{}_{}.eps".format(encoding, stat), format="eps", dpi=1000
         )

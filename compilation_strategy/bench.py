@@ -114,5 +114,5 @@ for encoding_name in ("BK", "JW", "P"):
         new_table_row = pd.DataFrame(results, columns=cols)
         print(new_table_row)
         stat_table = stat_table.append(new_table_row)
-        stat_table = stat_table.sort_values(by=['Active Spin Orbitals'])
+        stat_table = stat_table.sort_values(by=['Active Spin Orbitals', 'Circuit Name'])
         stat_table.to_csv(results_file, index=False)

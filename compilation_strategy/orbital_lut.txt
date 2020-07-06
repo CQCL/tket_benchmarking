@@ -1,19 +1,23 @@
 {"H2_BK_sto3g": 4, "H2_BK_631g": 8, "H4_BK_sto3g": 8, "LiH_BK_sto3g":
-12, "NH_BK_sto3g": 12, "CH2_BK_sto3g": 14, "H2O_BK_sto3g": 14,
-"H4_BK_631g": 16, "H8_BK_sto3g": 16, "NH3_BK_sto3g": 16,
-"N2_BK_sto3g": 20, "LiH_BK_631g": 22, "HNO_BK_sto3g": 22,
+12, "NH_BK_sto3g": 12, "BeH2_BK_sto3g": 14, "CH2_BK_sto3g": 14,
+"H2O_BK_sto3g": 14, "H4_BK_631g": 16, "H8_BK_sto3g": 16,
+"NH3_BK_sto3g": 16, "HCl_BK_sto3g": 20, "N2_BK_sto3g": 20,
+"C2_BK_sto3g": 20, "LiH_BK_631g": 22, "HNO_BK_sto3g": 22,
 "NH_BK_631g": 22, "H2CO_BK_sto3g": 24, "CH2_BK_631g": 26,
-"H2O_BK_631g": 26, "C2H4_BK_sto3g": 28, "CO2_BK_sto3g": 30,
-"H8_BK_631g": 32, "H2_JW_sto3g": 4, "H2_JW_631g": 8, "H4_JW_sto3g": 8,
-"LiH_JW_sto3g": 12, "NH_JW_sto3g": 12, "CH2_JW_sto3g": 14,
+"BeH2_BK_631g": 26, "H2O_BK_631g": 26, "C2H4_BK_sto3g": 28,
+"HCl_BK_631g": 30, "CO2_BK_sto3g": 30, "H8_BK_631g": 32,
+"H2_JW_sto3g": 4, "H2_JW_631g": 8, "H4_JW_sto3g": 8, "LiH_JW_sto3g":
+12, "NH_JW_sto3g": 12, "BeH2_JW_sto3g": 14, "CH2_JW_sto3g": 14,
 "H2O_JW_sto3g": 14, "H4_JW_631g": 16, "H8_JW_sto3g": 16,
-"NH3_JW_sto3g": 16, "H2_JW_ccpvdz": 20, "N2_JW_sto3g": 20,
-"LiH_JW_631g": 22, "HNO_JW_sto3g": 22, "NH_JW_631g": 22,
-"H2CO_JW_sto3g": 24, "CH2_JW_631g": 26, "H2O_JW_631g": 26,
-"C2H4_JW_sto3g": 28, "CO2_JW_sto3g": 30, "H8_JW_631g": 32,
-"H2_P_sto3g": 4, "H2_P_631g": 8, "H4_P_sto3g": 8, "LiH_P_sto3g": 12,
-"NH_P_sto3g": 12, "CH2_P_sto3g": 14, "H2O_P_sto3g": 14, "H4_P_631g":
-16, "H8_P_sto3g": 16, "NH3_P_sto3g": 16, "N2_P_sto3g": 20,
-"LiH_P_631g": 22, "HNO_P_sto3g": 22, "NH_P_631g": 22, "H2CO_P_sto3g":
-24, "CH2_P_631g": 26, "H2O_P_631g": 26, "C2H4_P_sto3g": 28,
-"CO2_P_sto3g": 30, "H8_P_631g":32}
+"NH3_JW_sto3g": 16, "C2_JW_sto3g": 20, "HCl_JW_sto3g": 20,
+"N2_JW_sto3g": 20, "LiH_JW_631g": 22, "HNO_JW_sto3g": 22,
+"NH_JW_631g": 22, "H2CO_JW_sto3g": 24, "CH2_JW_631g": 26,
+"H2O_JW_631g": 26, "BeH2_JW_631g": 26, "C2H4_JW_sto3g": 28,
+"HCl_JW_631g": 30, "CO2_JW_sto3g": 30, "H8_JW_631g": 32, "H2_P_sto3g":
+4, "H2_P_631g": 8, "H4_P_sto3g": 8, "LiH_P_sto3g": 12, "NH_P_sto3g":
+12, "BeH2_P_sto3g": 14, "CH2_P_sto3g": 14, "H2O_P_sto3g": 14,
+"H4_P_631g": 16, "H8_P_sto3g": 16, "NH3_P_sto3g": 16, "C2_P_sto3g":
+20, "HCl_P_sto3g": 20, "N2_P_sto3g": 20, "LiH_P_631g": 22,
+"HNO_P_sto3g": 22, "NH_P_631g": 22, "H2CO_P_sto3g": 24, "BeH2_P_631g":
+26, "CH2_P_631g": 26, "H2O_P_631g": 26, "C2H4_P_sto3g": 28,
+"HCl_P_631g": 30, "CO2_P_sto3g": 30, "H8_P_631g":32}
