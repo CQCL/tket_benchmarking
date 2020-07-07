@@ -33,10 +33,10 @@ for encoding in ("JW", "BK", "P"):
             # ignore list_vdBT here
             if len(l) < 19:
                 continue
-            reduction = 1 - sum(
-                [l[i] / list_uncoloured[i] for i in range(len(l))]
-            ) / len(l)
-            print("{} {}: {}".format(encoding, metric, reduction))
+            reduction_list = [1 - l[i] / list_uncoloured[i] for i in range(len(l))]
+            print("{} {} maximum reduction: {}".format(encoding, metric, max(reduction_list)))
+            reduction = sum(reduction_list)/len(l)
+            print("{} {} average reduction: {}".format(encoding, metric, reduction))
         f, (ax1) = plt.subplots(1, 1)
 
         markers = ["v", "p", "x", ".", "<"]
@@ -82,5 +82,5 @@ for encoding in ("JW", "BK", "P"):
         f.set_size_inches(6, 5, forward=True)
         stat = name.replace(" ", "_")
         plt.savefig(
-            "plots2/Compare_{}_{}.eps".format(encoding, stat), format="eps", dpi=1000
+            "plots/Compare_{}_{}.eps".format(encoding, stat), format="eps", dpi=1000
         )
