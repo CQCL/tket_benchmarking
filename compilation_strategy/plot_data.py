@@ -9,7 +9,6 @@ for encoding in ("JW", "BK", "P"):
     table_initial = pandas.read_csv("{}.csv".format(filename))
     if encoding == "JW":
         table_TLOS = pandas.read_csv("results/TLOS_results.csv")
-        table_vdBT = pandas.read_csv("results/vdBT_results.csv")
     for metric in ("Count", "Depth"):
 
         list_spins = table_initial["Active Spin Orbitals"]
@@ -18,35 +17,29 @@ for encoding in ("JW", "BK", "P"):
         list_set = table_initial["Set CX {}".format(metric)]
         if encoding == "JW":
             list_template = table_TLOS["TLOS CX {}".format(metric)]
-            if metric == "Count":
-                list_vdBT = table_vdBT["vdBT CX Count"]
-                list_spins_vdBT = table_vdBT["Active Spin Orbitals"]
         name = "CX {}".format(metric)
 
         all_lists = [list_uncoloured, list_pair, list_set]
         if encoding == "JW":
             all_lists.append(list_template)
-            if metric == "Count":
-                all_lists.append(list_vdBT)
 
         for l in all_lists:
-            # ignore list_vdBT here
-            if len(l) < 19:
-                continue
             reduction_list = [1 - l[i] / list_uncoloured[i] for i in range(len(l))]
-            print("{} {} maximum reduction: {}".format(encoding, metric, max(reduction_list)))
-            reduction = sum(reduction_list)/len(l)
+            print(
+                "{} {} maximum reduction: {}".format(
+                    encoding, metric, max(reduction_list)
+                )
+            )
+            reduction = sum(reduction_list) / len(l)
             print("{} {} average reduction: {}".format(encoding, metric, reduction))
         f, (ax1) = plt.subplots(1, 1)
 
-        markers = ["v", "p", "x", ".", "<"]
+        markers = ["v", "p", "x", "."]
         colours = sns.color_palette("Set2")
-        strat = ["Naive", "Pairwise", "Sets", "TLOS", "vdBT"]
-        linestyles = [":", "--", "-.", "-", (0, (3, 1, 1, 1, 1, 1))]
+        strat = ["Naive", "Pairwise", "Sets", "TLOS"]
+        linestyles = [":", "--", "-.", "-"]
         d = 4
         for i, l in enumerate(all_lists):
-            if i == 4:
-                list_spins = list_spins_vdBT
             ax1.plot(
                 list_spins,
                 l,
